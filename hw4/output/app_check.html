@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Customs — Live App Check (Problem 11)</title>
+<style>
+  :root { --blue:#00356b; --ink:#16213a; --muted:#5b6474; --border:#e3ded3; --ivory:#f8f6f1; --ok:#1b7f3b; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ivory); color:var(--ink); font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  header { background:var(--blue); color:#fff; padding:2rem 1.5rem; }
+  header h1 { margin:0 0 .3rem; font:700 2rem/1.2 "Iowan Old Style",Palatino,Georgia,serif; }
+  header p { margin:0; color:#cfe0f6; }
+  main { max-width:1100px; margin:0 auto; padding:1.5rem; }
+  .summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.75rem; margin:0 0 1.5rem; padding:0; list-style:none; }
+  .summary li { background:#fff; border:1px solid var(--border); border-left:4px solid var(--ok); border-radius:8px; padding:.75rem 1rem; }
+  .summary strong { display:block; color:var(--blue); }
+  section { background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.5rem; margin:0 0 1.75rem; box-shadow:0 2px 8px rgba(11,31,58,.05); }
+  h2 { margin:0 0 .25rem; color:var(--blue); font:700 1.5rem/1.25 "Iowan Old Style",Palatino,Georgia,serif; }
+  .result { display:inline-block; margin:0 0 .75rem; padding:.15rem .7rem; border-radius:999px; background:#e6f4ea; color:var(--ok); font-weight:700; font-size:.85rem; }
+  .proves { font-size:1.05rem; margin:.25rem 0 1rem; }
+  figure { margin:0 0 1rem; }
+  figure img { width:100%; height:auto; border:1px solid var(--border); border-radius:8px; display:block; }
+  figcaption { color:var(--muted); font-size:.88rem; margin-top:.35rem; }
+  .qa { background:var(--ivory); border-radius:8px; padding:.75rem 1rem; margin:0 0 1rem; }
+  .qa p { margin:.2rem 0; }
+  table { border-collapse:collapse; width:100%; font-size:.92rem; margin:.25rem 0 0; }
+  th, td { text-align:left; padding:.4rem .6rem; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { background:#eaf1fb; color:var(--blue); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; }
+  tr.hl td { background:#fff7d6; font-weight:700; }
+  td.ok { color:var(--ok); font-weight:600; white-space:nowrap; }
+  code { font-size:.82rem; }
+  details { margin-top:.75rem; }
+  summary { cursor:pointer; color:var(--blue); font-weight:600; }
+
+  footer { text-align:center; color:var(--muted); font-size:.85rem; padding:0 1rem 2rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Campus Customs — Live App Check</h1>
+  <p>Homework 4, Problem 11 · Screenshots of the running site (React + Vite frontend, FastAPI + PydanticAI backend, gpt-5.6-luna via Portkey) using the real <code>data/campus_customs.db</code>.</p>
+</header>
+<main>
+<ul class="summary">
+  <li><strong>1. Chat inventory check</strong>PASS — real stock and price</li>
+  <li><strong>2. Dynamic search-result cards</strong>PASS — 8 real hoodie cards</li>
+  <li><strong>3. Problem 9 usability feature</strong>PASS — Products page filters</li>
+</ul>
+
+<section id="inventory">
+  <h2>1. Chat inventory check</h2>
+  <span class="result">PASS</span>
+  <p class="proves">The chatbot answers that there are <strong>5</strong> Football Left Chest T Shirts in <strong>XXL</strong> at <strong>$32.00</strong>. Those are the exact values in the database, and they are also visible on the same screen in the product page's price and its size table ("XXL — Only 5 left"), which is rendered from the <code>inventory</code> table.</p>
+  <div class="qa">
+    <p><strong>Shopper:</strong> How many Football Left Chest T Shirts do you have in XXL, and what is the price?</p>
+    <p><strong>Assistant:</strong> There are 5 Football Left Chest T Shirts available in XXL. The price is $32.00.</p>
+  </div>
+  <figure>
+    <img src="app_check_images/inventory.png" alt="Product page for Football Left Chest T Shirt with the chat open: the shopper asks about XXL stock and price, the assistant answers 5 units at $32.00, and the page's size table shows XXL only 5 left">
+    <figcaption>Live site, product page with the chat open. The agent called <code>get_stock_by_size(product="football-left-chest-t-shirt", size="XXL")</code> and <code>get_product_price</code> (from the backend log).</figcaption>
+  </figure>
+  <details open><summary>Database values for this product</summary>
+    <table><thead><tr><th>Size</th><th>Quantity in <code>inventory</code></th></tr></thead><tbody><tr><td>XS</td><td>0</td></tr><tr><td>S</td><td>2</td></tr><tr><td>M</td><td>0</td></tr><tr><td>L</td><td>2</td></tr><tr><td>XL</td><td>0</td></tr><tr class="hl"><td>XXL</td><td>5</td></tr></tbody></table>
+    <p>Price in <code>catalogue</code>: <strong>$32.00</strong>.</p>
+  </details>
+</section>
+
+<section id="search-cards">
+  <h2>2. Dynamic search-result cards</h2>
+  <span class="result">PASS</span>
+  <p class="proves">Asking "What hoodies do you have?" makes the agent search the real catalogue (<code>search_catalogue(category="hoodie")</code>). The chat then renders product cards for the top 8 of the database's <strong>27</strong> hoodies, each with the correct image, garment type, name, price, and description. The reply's totals (27 hoodies, $45.00–$88.00 overall) match the database.</p>
+  <div class="qa">
+    <p><strong>Shopper:</strong> What hoodies do you have?</p>
+    <p><strong>Assistant:</strong> We have 27 hoodies overall, ranging from $45.00 to $88.00. Here are the top 8 matches; 17 are navy and 10 are gray, with 2 under $50.</p>
+  </div>
+  <div class="stack">
+    <figure>
+      <img src="app_check_images/hoodie_cards.png" alt="Chat reply saying there are 27 hoodies, with the first product cards: Yale Mom Hoodie and Yale Dad Hoodie at $68.00">
+      <figcaption>The reply and the first cards (Yale Mom Hoodie, Yale Dad Hoodie).</figcaption>
+    </figure>
+    <figure>
+      <img src="app_check_images/hoodie_cards_more.png" alt="The last product cards in the chat, Champion Full Zip Hood $88.00 and Yale Sports Hoodie Hockey $68.00, followed by suggestion chips">
+      <figcaption>Scrolled down: the last cards and the agent's follow-up suggestions (Show navy hoodies, Show gray hoodies, Hoodies under $50, Show more hoodies).</figcaption>
+    </figure>
+  </div>
+  <details open><summary>All 8 cards shown, compared with the database</summary>
+    <table><thead><tr><th>#</th><th>Name</th><th>Price</th><th>Garment type</th><th>Image</th><th>vs. database</th></tr></thead><tbody><tr><td>1</td><td>Yale Mom Hoodie</td><td>$68.00</td><td>pullover hoodie</td><td><code>/media/products/yale-mom-hoodie.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>2</td><td>Yale Dad Hoodie</td><td>$68.00</td><td>pullover hoodie</td><td><code>/media/products/yale-dad-hoodie.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>3</td><td>Yale Sports Hoodie Tennis</td><td>$45.00</td><td>hooded sweatshirt</td><td><code>/media/products/yale-sports-hoodie-tennis.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>4</td><td>Basic Hoodie Big Yale</td><td>$68.00</td><td>pullover hoodie</td><td><code>/media/products/basic-hoodie-big-yale.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>5</td><td>Volleyball Left Chest Hoodie</td><td>$68.00</td><td>pullover hoodie</td><td><code>/media/products/volleyball-left-chest-hoodie.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>6</td><td>Yale Aunt Hoodie</td><td>$68.00</td><td>hoodie</td><td><code>/media/products/yale-aunt-hoodie.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>7</td><td>Champion Full Zip Hood</td><td>$88.00</td><td>full-zip hooded sweatshirt</td><td><code>/media/products/champion-full-zip-hood.jpg</code></td><td class='ok'>✓ matches</td></tr><tr><td>8</td><td>Yale Sports Hoodie Hockey</td><td>$68.00</td><td>pullover hoodie</td><td><code>/media/products/yale-sports-hoodie-hockey.jpg</code></td><td class='ok'>✓ matches</td></tr></tbody></table>
+    <p>Clicking the first card opened <code>/products/yale-mom-hoodie</code>, the single-product page for "Yale Mom Hoodie" ($68.00).</p>
+  </details>
+</section>
+
+<section id="usability">
+  <h2>3. Problem 9 usability feature: Products page search and filters</h2>
+  <span class="result">PASS</span>
+  <p class="proves">Choosing Category = Hoodies, Price = Under $50, and Sort = Price: low to high narrows the 102-product catalogue to exactly the <strong>2</strong> hoodies under $50 in the database ("Showing 2 of 102 products"). The filters are kept in the page URL (<code>/products?category=hoodie&amp;price=under-50&amp;sort=price-low</code>).</p>
+  <figure>
+    <img src="app_check_images/products_filter.png" alt="Products page with the Hoodies, Under $50, and price low-to-high filters applied, showing 2 of 102 products">
+    <figcaption>Live Products page with the filter bar applied. No chatbot or model call is involved.</figcaption>
+  </figure>
+  <details open><summary>Products shown (database: hoodies with price &lt; $50)</summary>
+    <table><thead><tr><th>Name</th><th>Price</th><th>Garment type</th></tr></thead><tbody><tr><td>Ua Gameday Double Knit Hood</td><td>$45.00</td><td>hooded pullover sweatshirt</td></tr><tr><td>Yale Sports Hoodie Tennis</td><td>$45.00</td><td>hooded sweatshirt</td></tr></tbody></table>
+  </details>
+</section>
+</main>
+<footer>All screenshots were taken from the running app (backend: <code>uvicorn main:app --reload --port 8000</code> from <code>backend/</code>) with a headless Chrome browser, as a guest, so no chat history was written to the database.</footer>
+</body>
+</html>

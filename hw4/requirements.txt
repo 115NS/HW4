@@ -1,0 +1,6 @@
+# Backend dependencies (tested with Python 3.14, fastapi 0.142, uvicorn 0.54, pydantic-ai-slim 2.54).
+fastapi>=0.115
+uvicorn[standard]>=0.30
+itsdangerous>=2.2
+pydantic-ai-slim[openai]>=2.50,<3
+python-dotenv>=1.0

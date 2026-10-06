@@ -1,0 +1,33 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Provided data (do not commit)
+data/campus_customs.db
+data/products/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+dist/
+
+# OS / submission artifacts
+.DS_Store
+*.zip
+
+# Audit trail write helpers
+output/*.lock
+output/*.tmp
+
+# SQLite side files and local-only extras
+data/*.db
+data/*.db-*
+*.sqlite
+output/audit_trail.unreadable-*.json
+.vscode/
+.idea/
