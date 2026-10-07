@@ -434,3 +434,64 @@ The first prompt did not say which GitHub repository to push to or how to authen
 > Before pushing, do one final check that .env, campus_customs.db, product images, and any other files excluded by the final scan are not included.
 > Use the GitHub authentication method we selected: Token in Terminal tab. I will enter my credentials/token myself in the Terminal when prompted.
 > After the push, verify that the public repository has the expected hw4/ folder and files, and give me the final repository URL.
+
+### Follow-up prompt
+
+The earlier prompts did not ask for a final grader-style audit of the public repository, so this follow-up requests one without changing the repository.
+
+> I want to do one final submission check for Homework 4, Problem 13.
+> The public GitHub repository is:
+> https://github.com/115NS/HW4
+> Please inspect the public repository exactly as a grader would and compare it against the Problem 13 requirements from the assignment.
+> The required structure is:
+> hw4/
+> ├── AI_prompts.md
+> ├── requirements.txt
+> ├── .env.example
+> ├── .gitignore
+> ├── README.md
+> ├── frontend/
+> ├── backend/
+> │ ├── main.py
+> │ ├── agent.py
+> │ ├── models.py
+> │ ├── tools.py
+> │ └── prompts/
+> │ └── prompt.md
+> └── output/
+> ├── harness.md
+> ├── design.md
+> ├── usability.md
+> ├── app_check.html
+> ├── app_check_images/
+> └── audit_trail.json
+> Please verify all of the following:
+>
+> * The repository is public.
+> * The homework is inside a folder named exactly hw4/.
+> * The repository URL is the correct URL to submit on Canvas.
+> * The real .env is not present.
+> * campus_customs.db is not present.
+> * The product images/data pack are not present.
+> * .env.example is present with placeholders only.
+> * .gitignore is present.
+> * README.md is present and explains how a grader can set up and run the project after placing the data pack.
+> * AI_prompts.md is present.
+> * output/app_check.html is present and all screenshots it references are present and load correctly.
+> * The required output documentation from Problems 9–12 is present.
+> * There are no API keys, tokens, password hashes, real customer data, or other secrets in the public repository.
+> * Everything that should be under hw4/ is actually under hw4/, rather than accidentally sitting at the repository root.
+> * Check for any other files that are unnecessary, misplaced, or potentially problematic for grading.
+>
+> Please also compare the public repository against the actual assignment requirements rather than assuming the current structure is correct.
+> Do not change, delete, commit, or push anything. This is only a final audit.
+> Please report:
+>
+> 1. Whether every Problem 13 requirement passes.
+> 2. Any missing, extra, misplaced, or potentially problematic files.
+> 3. Anything in the public repo that could cost me points or create a security/privacy issue.
+> 4. The exact repository URL I should submit on Canvas.
+> 5. Whether you think the submission is ready to submit.
+>
+> Also update AI_prompts.md with this exact follow-up prompt under Problem 13. Do not invent any additional prompts or follow-ups. Do not change the wording of the prompt when logging it.
+> The GitHub token that was previously exposed has already been revoked, so do not make any changes related to that token and do not create another token.
